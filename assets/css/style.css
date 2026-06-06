@@ -370,9 +370,9 @@
       .hero-brand-text { border-left: none; padding-left: 0; }
       .hero-brand-logo { width: 68px; height: 68px; }
       .hero-title { font-size: clamp(1.9rem, 4vw, 3rem); word-break: break-word; }
-      .search-bar { padding: 12px 14px; }
-      .search-bar input { width: 100%; }
-      .search-btn { width: 100%; justify-content: center; }
+      .search-bar { padding: 12px 14px; flex-wrap: nowrap; }
+      .search-bar input { flex: 1; min-width: 0; width: auto; }
+      .search-btn { width: auto; justify-content: center; }
       .book-meta { flex-direction: column; align-items: flex-start; gap: 10px; }
       .book-meta .borrow-btn { width: 100%; justify-content: center; }
       .modal-box { padding: 24px; }
