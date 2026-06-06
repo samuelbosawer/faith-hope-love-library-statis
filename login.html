@@ -11,12 +11,12 @@
   <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="assets/img/logo.svg" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="/assets/js/config.js"></script>
+  <script src="/assets/js/library.js"></script>
   <link rel="stylesheet" href="/assets/css/style.css" />
 </head>
-<body x-data="libraryApp()" x-init="init()" @keydown.escape.window="closeSearch(); closeBook()" @keydown.ctrl.k.window.prevent="openSearch()" @keydown.meta.k.window.prevent="openSearch()">
-<nav id="desktop-nav" :class="{ scrolled: isScrolled }">
+<body id="app" data-init="init()" data-keydown-escape="closeSearch(); closeBook()" data-keydown-ctrl-k="openSearch()" data-keydown-meta-k="openSearch()">
+<nav id="desktop-nav" data-class="{ scrolled: isScrolled }">
   <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
     <a href="index.html" class="flex items-center gap-3 no-underline">
       <div class="w-10 h-10 rounded-xl overflow-hidden border border-white/20 bg-white shadow-sm">
@@ -24,7 +24,7 @@
       </div>
       <div>
         <div class="font-bold leading-none" style="font-family:'Playfair Display',serif;color:#3b0764;font-size:1rem">Faith Hope Love</div>
-        <div style="font-family:'Poppins',sans-serif;font-size:0.62rem;color:#9333ea;letter-spacing:.06em;text-transform:uppercase;font-weight:500">Library · Jayapura</div>
+        <div style="font-family:'Poppins',sans-serif;font-size:0.62rem;color:#9333ea;letter-spacing:.06em;text-transform:uppercase;font-weight:500">Library ï¿½ Jayapura</div>
       </div>
     </a>
     <div class="flex items-center gap-7">
@@ -34,7 +34,7 @@
       <a href="status-book.html" class="nav-link">Status Pinjam</a>
     </div>
     <div class="flex items-center gap-3">
-      <button @click="openSearch()" class="flex items-center gap-2 px-4 py-2 rounded-full border border-purple-200 text-purple-700 text-sm font-medium hover:bg-purple-50 transition" style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:600">
+      <button data-on-click="openSearch()" class="flex items-center gap-2 px-4 py-2 rounded-full border border-purple-200 text-purple-700 text-sm font-medium hover:bg-purple-50 transition" style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:600">
         <i class="fa-solid fa-magnifying-glass"></i> Cari Buku
       </button>
       <a href="register.html" class="btn-primary" style="font-size:0.78rem;padding:10px 22px"><i class="fa-solid fa-user-plus"></i> Daftar</a>
@@ -108,25 +108,25 @@
     </div>
     <div style="height:1px;background:rgba(255,255,255,.15);margin-bottom:24px"></div>
     <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
-      <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:rgba(255,255,255,.7)">© 2025 Faith Hope Love Library. Gratis untuk semua warga Jayapura.</div>
+      <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:rgba(255,255,255,.7)">ï¿½ 2025 Faith Hope Love Library. Gratis untuk semua warga Jayapura.</div>
       <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:rgba(255,255,255,.7)">By Diana Kambuaya</div>
     </div>
   </div>
 </footer>
-<div class="modal-overlay" :class="{ open: searchModalOpen }" @click.self="closeSearch()">
+<div class="modal-overlay" data-class="{ open: searchModalOpen }" data-on-click-self="closeSearch()">
   <div class="modal-box" style="max-width:560px">
-    <button class="modal-close" @click="closeSearch()"><i class="fa-solid fa-xmark"></i></button>
+    <button class="modal-close" data-on-click="closeSearch()"><i class="fa-solid fa-xmark"></i></button>
     <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#3b0764;margin-bottom:16px">Cari Buku</h3>
     <div class="search-bar mb-6">
       <i class="fa-solid fa-magnifying-glass text-purple-300 mr-2"></i>
-      <input type="text" placeholder="Judul, penulis, atau kategori..." x-model="searchQuery" x-ref="searchInput" @input="" />
+      <input type="text" placeholder="Judul, penulis, atau kategori..." data-model="searchQuery" x-ref="searchInput" @input="" />
       <button class="search-btn"><i class="fa-solid fa-search"></i> Cari</button>
     </div>
-    <div x-show="searchQuery.trim()===''">
+    <div data-show="searchQuery.trim()===''">
       <div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:10px">Pencarian Populer</div>
       <div class="flex flex-wrap gap-2">
-        <template x-for="tag in popularSearchTags" :key="tag">
-          <span class="chip" @click="searchQuery=tag" x-text="tag"></span>
+        <template data-for="tag in popularSearchTags">
+          <span class="chip" data-on-click="searchQuery=tag" data-text="tag"></span>
         </template>
       </div>
     </div>
@@ -134,14 +134,14 @@
       <template x-if="searchQuery.trim()!=='' && searchResults.length===0">
         <p style="font-family:Poppins,sans-serif;font-size:0.85rem;color:#9ca3af;text-align:center;padding:16px">Tidak ditemukan. Coba kata kunci lain.</p>
       </template>
-      <template x-for="b in searchResults" :key="b.id">
-        <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 cursor-pointer transition" @click="closeSearch(); openBook(b.id)">
-          <div class="w-10 h-12 rounded-lg flex items-center justify-center flex-shrink-0" :style="`background:linear-gradient(135deg,${b.color.split(',')[0]},${b.color.split(',')[1]})`">
-            <i class="fa-solid text-white" :class="b.icon"></i>
+      <template data-for="b in searchResults">
+        <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 cursor-pointer transition" data-on-click="closeSearch(); openBook(b.id)">
+          <div class="w-10 h-12 rounded-lg flex items-center justify-center flex-shrink-0" data-style="`background:linear-gradient(135deg,${b.color.split(',')[0]},${b.color.split(',')[1]})`">
+            <i class="fa-solid text-white" data-class="b.icon"></i>
           </div>
           <div>
-            <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.88rem;color:#3b0764" x-text="b.title"></div>
-            <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:#9ca3af" x-text="b.author+' · '+b.cat"></div>
+            <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.88rem;color:#3b0764" data-text="b.title"></div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:#9ca3af" data-text="b.author+' ï¿½ '+b.cat"></div>
           </div>
           <div class="ml-auto stars text-xs" x-html="starHtml(b.rating)"></div>
         </div>

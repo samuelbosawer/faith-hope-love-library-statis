@@ -11,12 +11,12 @@
   <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="assets/img/logo.svg" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="/assets/js/config.js"></script>
+  <script src="/assets/js/library.js"></script>
   <link rel="stylesheet" href="/assets/css/style.css" />
 </head>
-<body x-data="libraryApp()" x-init="init()" @keydown.escape.window="closeSearch(); closeBook()" @keydown.ctrl.k.window.prevent="openSearch()" @keydown.meta.k.window.prevent="openSearch()">
-<nav id="desktop-nav" :class="{ scrolled: isScrolled }">
+<body id="app" data-init="\1" data-keydown-escape="\1" data-keydown-ctrl-k="\1" data-keydown-meta-k="\1">
+<nav id="desktop-nav" data-class="\1">
   <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
     <a href="index.html" class="flex items-center gap-3 no-underline">
       <div class="w-10 h-10 rounded-xl overflow-hidden border border-white/20 bg-white shadow-sm">
@@ -37,7 +37,7 @@
       <a href="register.html" class="nav-link">Daftar</a>
     </div>
     <div class="flex items-center gap-3">
-      <button @click="openSearch()" class="flex items-center gap-2 px-4 py-2 rounded-full border border-purple-200 text-purple-700 text-sm font-medium hover:bg-purple-50 transition" style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:600">
+      <button data-on-click="\1" class="flex items-center gap-2 px-4 py-2 rounded-full border border-purple-200 text-purple-700 text-sm font-medium hover:bg-purple-50 transition" style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:600">
         <i class="fa-solid fa-magnifying-glass"></i> Cari Buku
       </button>
       <a href="dashboard-visitor.html" class="btn-primary" style="font-size:0.78rem;padding:10px 22px"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
@@ -55,23 +55,23 @@
       <a href="all-book.html" class="flex items-center gap-2 text-purple-700 font-semibold text-sm hover:text-purple-900 transition" style="font-family:'Montserrat',sans-serif;white-space:nowrap"><i class="fa-solid fa-book-open-reader"></i> Lihat Semua Buku</a>
     </div>
     <div class="scroll-row lg:grid lg:grid-cols-4 lg:gap-5">
-      <template x-for="book in books" :key="book.id">
-        <div class="book-item" @click="openBook(book.id)">
-          <div class="book-cover" :style="`background:linear-gradient(135deg,${book.color.split(',')[0]},${book.color.split(',')[1]})`">
+      <template data-for="\1">
+        <div class="book-item" data-on-click="\1">
+          <div class="book-cover" data-style="\1">
             <div class="book-cover-inner">
-              <i class="fa-solid text-white/60 text-4xl" :class="book.icon"></i>
-              <div class="book-cover-title" x-text="book.title"></div>
-              <div class="book-cover-author" x-text="book.author"></div>
+              <i class="fa-solid text-white/60 text-4xl" data-class="\1"></i>
+              <div class="book-cover-title" data-text="\1"></div>
+              <div class="book-cover-author" data-text="\1"></div>
             </div>
             <template x-if="book.isNew"><span class="badge-new">NEW</span></template>
             <template x-if="book.isBest"><span class="badge-best">BEST</span></template>
           </div>
           <div class="book-body">
-            <div class="book-title" x-text="book.title"></div>
-            <div class="book-author" x-text="book.author"></div>
+            <div class="book-title" data-text="\1"></div>
+            <div class="book-author" data-text="\1"></div>
             <div class="book-meta">
-              <div class="flex items-center gap-2"><i class="fa-solid fa-star text-yellow-400"></i><span class="rating-text" x-text="book.rating"></span></div>
-              <button class="borrow-btn" @click.stop="borrowBook(book.title)"><i class="fa-solid fa-hand-holding-heart"></i> Pinjam</button>
+              <div class="flex items-center gap-2"><i class="fa-solid fa-star text-yellow-400"></i><span class="rating-text" data-text="\1"></span></div>
+              <button class="borrow-btn" data-on-click-stop="\1"><i class="fa-solid fa-hand-holding-heart"></i> Pinjam</button>
             </div>
           </div>
         </div>
@@ -84,7 +84,7 @@
       </div>
       <div class="feature-banner" style="background:linear-gradient(135deg,#6b21a8,#9333ea);padding:24px;">
         <div style="font-family:'Montserrat',sans-serif;font-weight:700;color:white;text-transform:uppercase;letter-spacing:.12em;font-size:0.78rem">Jam Operasional</div>
-        <p class="mt-4" style="font-family:'Poppins',sans-serif;color:white;line-height:1.8">Senin�Sabtu 08.00�17.00. Datang langsung atau hubungi kami untuk informasi koleksi.</p>
+        <p class="mt-4" style="font-family:'Poppins',sans-serif;color:white;line-height:1.8">Senin - Sabtu 08.00 - 17.00. Datang langsung atau hubungi kami untuk informasi koleksi.</p>
       </div>
       <div class="feature-banner" style="background:linear-gradient(135deg,#4c1d95,#a78bfa);padding:24px;">
         <div style="font-family:'Montserrat',sans-serif;font-weight:700;color:white;text-transform:uppercase;letter-spacing:.12em;font-size:0.78rem">Kontak Cepat</div>
@@ -134,7 +134,7 @@
       <div>
         <div class="footer-title">Hubungi Kami</div>
         <div class="footer-link flex items-center gap-2"><i class="fa-solid fa-location-dot text-purple-400"></i>Kota Jayapura, Papua</div>
-        <div class="footer-link flex items-center gap-2"><i class="fa-solid fa-clock text-purple-400"></i>Senin�Sabtu 08.00�17.00</div>
+        <div class="footer-link flex items-center gap-2"><i class="fa-solid fa-clock text-purple-400"></i>Senin- Sabtu 08.00 - 17.00</div>
         <div class="footer-link flex items-center gap-2"><i class="fa-solid fa-envelope text-purple-400"></i>faithhopelove@library.id</div>
       </div>
     </div>
@@ -145,20 +145,20 @@
     </div>
   </div>
 </footer>
-<div class="modal-overlay" :class="{ open: searchModalOpen }" @click.self="closeSearch()">
+<div class="modal-overlay" data-class="\1" data-on-click-self="\1">
   <div class="modal-box" style="max-width:560px">
-    <button class="modal-close" @click="closeSearch()"><i class="fa-solid fa-xmark"></i></button>
+    <button class="modal-close" data-on-click="\1"><i class="fa-solid fa-xmark"></i></button>
     <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#3b0764;margin-bottom:16px">Cari Buku</h3>
     <div class="search-bar mb-6">
       <i class="fa-solid fa-magnifying-glass text-purple-300 mr-2"></i>
-      <input type="text" placeholder="Judul, penulis, atau kategori..." x-model="searchQuery" x-ref="searchInput" @input="" />
+      <input type="text" placeholder="Judul, penulis, atau kategori..." data-model="\1" x-ref="searchInput" @input="" />
       <button class="search-btn"><i class="fa-solid fa-search"></i> Cari</button>
     </div>
-    <div x-show="searchQuery.trim()===''">
+    <div data-show="\1">
       <div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:10px">Pencarian Populer</div>
       <div class="flex flex-wrap gap-2">
-        <template x-for="tag in popularSearchTags" :key="tag">
-          <span class="chip" @click="searchQuery=tag" x-text="tag"></span>
+        <template data-for="\1">
+          <span class="chip" data-on-click="\1" data-text="\1"></span>
         </template>
       </div>
     </div>
@@ -166,14 +166,14 @@
       <template x-if="searchQuery.trim()!=='' && searchResults.length===0">
         <p style="font-family:Poppins,sans-serif;font-size:0.85rem;color:#9ca3af;text-align:center;padding:16px">Tidak ditemukan. Coba kata kunci lain.</p>
       </template>
-      <template x-for="b in searchResults" :key="b.id">
-        <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 cursor-pointer transition" @click="closeSearch(); openBook(b.id)">
-          <div class="w-10 h-12 rounded-lg flex items-center justify-center flex-shrink-0" :style="`background:linear-gradient(135deg,${b.color.split(',')[0]},${b.color.split(',')[1]})`">
-            <i class="fa-solid text-white" :class="b.icon"></i>
+      <template data-for="\1">
+        <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 cursor-pointer transition" data-on-click="\1">
+          <div class="w-10 h-12 rounded-lg flex items-center justify-center flex-shrink-0" data-style="\1">
+            <i class="fa-solid text-white" data-class="\1"></i>
           </div>
           <div>
-            <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.88rem;color:#3b0764" x-text="b.title"></div>
-            <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:#9ca3af" x-text="b.author+' � '+b.cat"></div>
+            <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.88rem;color:#3b0764" data-text="\1"></div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:#9ca3af" data-text="\1"></div>
           </div>
           <div class="ml-auto stars text-xs" x-html="starHtml(b.rating)"></div>
         </div>
