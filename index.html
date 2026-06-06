@@ -50,7 +50,7 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
 
 </head>
 <body
@@ -649,10 +649,10 @@
     <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#3b0764;margin-bottom:16px">Cari Buku</h3>
     <div class="search-bar mb-6">
       <i class="fa-solid fa-magnifying-glass text-purple-300 mr-2"></i>
-      <input type="text" placeholder="Judul, penulis, atau kategori..."
-             x-model="searchQuery"
-             x-ref="searchInput"
-             @input="/* reactive via computed */" />
+      <input type="text"
+       placeholder="Judul, penulis, atau kategori..."
+       x-model="searchQuery"
+       x-ref="searchInput" />
       <button class="search-btn"><i class="fa-solid fa-search"></i> Cari</button>
     </div>
     <div x-show="searchQuery.trim()===''">
