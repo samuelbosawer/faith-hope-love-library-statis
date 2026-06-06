@@ -153,12 +153,14 @@
       padding: 10px 10px 10px 20px;
       box-shadow: 0 4px 20px rgba(126,34,206,0.08);
       transition: border-color .25s, box-shadow .25s;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     .search-bar:focus-within {
       border-color: var(--purple-light); box-shadow: 0 4px 24px rgba(126,34,206,0.18);
     }
     .search-bar input {
-      flex: 1; border: none; outline: none; background: transparent;
+      flex: 1; min-width: 0; border: none; outline: none; background: transparent;
       font-family: 'Poppins', sans-serif; font-size: 0.88rem; color: #1e1327;
     }
     .search-bar input::placeholder { color: #c4b5d4; }
@@ -367,7 +369,10 @@
       .hero-brand { flex-wrap: wrap; gap: 14px; }
       .hero-brand-text { border-left: none; padding-left: 0; }
       .hero-brand-logo { width: 68px; height: 68px; }
-      .hero-title { font-size: clamp(1.9rem, 4vw, 3rem); }
+      .hero-title { font-size: clamp(1.9rem, 4vw, 3rem); word-break: break-word; }
+      .search-bar { padding: 12px 14px; }
+      .search-bar input { width: 100%; }
+      .search-btn { width: 100%; justify-content: center; }
       .book-meta { flex-direction: column; align-items: flex-start; gap: 10px; }
       .book-meta .borrow-btn { width: 100%; justify-content: center; }
       .modal-box { padding: 24px; }
