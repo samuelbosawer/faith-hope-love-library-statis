@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detail Buku | Faith Hope Love Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/img/logo.svg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="/assets/js/config.js"></script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body x-data="libraryApp()" x-init="init(); selectedBook = books[0]" @keydown.escape.window="closeSearch(); closeBook()" @keydown.ctrl.k.window.prevent="openSearch()" @keydown.meta.k.window.prevent="openSearch()">
+<nav id="desktop-nav" :class="{ scrolled: isScrolled }">
+  <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3 no-underline">
+      <div class="w-10 h-10 rounded-xl overflow-hidden border border-white/20 bg-white shadow-sm">
+        <img src="assets/img/logo.svg" alt="Faith Hope Love Library" class="w-full h-full object-contain" />
+      </div>
+      <div>
+        <div class="font-bold leading-none" style="font-family:'Playfair Display',serif;color:#3b0764;font-size:1rem">Faith Hope Love</div>
+        <div style="font-family:'Poppins',sans-serif;font-size:0.62rem;color:#9333ea;letter-spacing:.06em;text-transform:uppercase;font-weight:500">Library � Jayapura</div>
+      </div>
+    </a>
+    <div class="flex items-center gap-7">
+      <a href="index.html#best-books" class="nav-link">Terpopuler</a>
+      <a href="index.html#new-books" class="nav-link">Buku Baru</a>
+      <a href="index.html#categories" class="nav-link">Kategori</a>
+      <a href="index.html#about" class="nav-link">Tentang</a>
+      <a href="login.html" class="nav-link">Masuk</a>
+      <a href="register.html" class="nav-link">Daftar</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button @click="openSearch()" class="flex items-center gap-2 px-4 py-2 rounded-full border border-purple-200 text-purple-700 text-sm font-medium hover:bg-purple-50 transition" style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:600">
+        <i class="fa-solid fa-magnifying-glass"></i> Cari Buku
+      </button>
+      <a href="borrow-book.html" class="btn-primary" style="font-size:0.78rem;padding:10px 22px"><i class="fa-solid fa-book-open-reader"></i> Pinjam</a>
+    </div>
+  </div>
+</nav>
+<section class="py-20 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="grid lg:grid-cols-2 gap-10 items-start">
+      <div class="bg-white rounded-3xl shadow-[0_20px_60px_rgba(59,7,100,0.14)] p-8">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-20 h-20 rounded-3xl flex items-center justify-center" :style="`background:linear-gradient(135deg,${selectedBook.color.split(',')[0]},${selectedBook.color.split(',')[1]})`">
+            <i class="fa-solid text-white text-4xl" :class="selectedBook.icon"></i>
+          </div>
+          <div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:#3b0764;font-weight:700" x-text="selectedBook.title"></div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.9rem;color:#9333ea;margin-top:6px" x-text="selectedBook.cat"></div>
+          </div>
+        </div>
+        <div class="mb-4">
+          <div style="font-family:'Montserrat',sans-serif;font-size:0.8rem;text-transform:uppercase;letter-spacing:.12em;color:#6b7280">Penulis</div>
+          <div style="font-family:'Poppins',sans-serif;font-size:1rem;color:#3b0764" x-text="selectedBook.author"></div>
+        </div>
+        <div class="book-meta">
+          <div class="flex items-center gap-2"><i class="fa-solid fa-star text-yellow-400"></i><span class="rating-text" x-text="selectedBook.rating"></span></div>
+          <button class="borrow-btn" @click.stop="borrowBook(selectedBook.title)"><i class="fa-solid fa-hand-holding-heart"></i> Pinjam Sekarang</button>
+        </div>
+        <div class="mt-8" style="font-family:'Poppins',sans-serif;color:#6b7280;line-height:1.8">
+          <p>Buku ini tersedia di Faith Hope Love Library. Segera kunjungi perpustakaan untuk meminjam judul ini dan temukan lebih banyak koleksi inspiratif lainnya.</p>
+          <p class="mt-4">Koleksi kami mencakup buku novel, rohani, pendidikan, anak, dan sejarah Papua. Semua dipinjamkan secara gratis bagi warga Jayapura.</p>
+        </div>
+      </div>
+      <div class="space-y-6">
+        <div class="feature-banner" style="padding:32px;">
+          <div style="font-family:'Montserrat',sans-serif;font-weight:700;color:white;text-transform:uppercase;letter-spacing:.12em;font-size:0.78rem">Ringkasan</div>
+          <div class="mt-6 grid grid-cols-2 gap-4">
+            <div class="bg-white rounded-3xl p-5 text-center shadow-sm">
+              <div style="font-family:'Poppins',sans-serif;font-weight:700;color:#3b0764;font-size:1.5rem" x-text="selectedBook.reads"></div>
+              <div style="font-family:'Poppins',sans-serif;color:rgba(255,255,255,.8);font-size:0.8rem">Pembaca</div>
+            </div>
+            <div class="bg-white rounded-3xl p-5 text-center shadow-sm">
+              <div style="font-family:'Poppins',sans-serif;font-weight:700;color:#3b0764;font-size:1.5rem" x-text="selectedBook.rating"></div>
+              <div style="font-family:'Poppins',sans-serif;color:rgba(255,255,255,.8);font-size:0.8rem">Rating</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+          <div class="section-eyebrow mb-4">Detail Buku</div>
+          <ul class="space-y-3" style="font-family:'Poppins',sans-serif;color:#4b5563;font-size:0.95rem;line-height:1.8">
+            <li><strong>Judul:</strong> <span x-text="selectedBook.title"></span></li>
+            <li><strong>Penulis:</strong> <span x-text="selectedBook.author"></span></li>
+            <li><strong>Kategori:</strong> <span x-text="selectedBook.cat"></span></li>
+            <li><strong>Status:</strong> Tersedia untuk dipinjam</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="py-16 px-6" style="background:#3b0764;color:white;">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-xl overflow-hidden border border-white/20 bg-white shadow-sm">
+            <img src="assets/img/logo.svg" alt="Faith Hope Love Library" class="w-full h-full object-contain" />
+          </div>
+          <div>
+            <div style="font-family:'Playfair Display',serif;color:white;font-weight:700;font-size:1rem">Faith Hope Love</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.62rem;color:#c084fc;letter-spacing:.06em;text-transform:uppercase">Library</div>
+          </div>
+        </div>
+        <p class="footer-link" style="display:block;line-height:1.7;font-size:0.82rem">Tempat peminjaman buku gratis untuk seluruh warga Kota Jayapura, Papua.</p>
+        <div class="flex gap-2 mt-4"><a href="#" class="social-btn"><i class="fa-brands fa-instagram"></i></a><a href="#" class="social-btn"><i class="fa-brands fa-facebook"></i></a><a href="#" class="social-btn"><i class="fa-brands fa-whatsapp"></i></a><a href="#" class="social-btn"><i class="fa-brands fa-youtube"></i></a></div>
+      </div>
+      <div>
+        <div class="footer-title">Navigasi</div>
+        <a href="index.html" class="footer-link">Beranda</a>
+        <a href="all-book.html" class="footer-link">Semua Buku</a>
+        <a href="borrow-book.html" class="footer-link">Pinjam Buku</a>
+        <a href="status-book.html" class="footer-link">Status Pinjam</a>
+      </div>
+      <div>
+        <div class="footer-title">Akun & Admin</div>
+        <a href="login.html" class="footer-link">Masuk</a>
+        <a href="register.html" class="footer-link">Daftar</a>
+        <a href="admin/dashboard-admin.html" class="footer-link">Dashboard Admin</a>
+        <a href="admin/data-book-admin.html" class="footer-link">Data Buku Admin</a>
+        <a href="admin/add-book-admin.html" class="footer-link">Tambah Buku Admin</a>
+        <a href="coming-soon.html" class="footer-link">Segera Hadir</a>
+      </div>
+      <div>
+        <div class="footer-title">Kategori Populer</div>
+        <a href="#" class="footer-link">Novel & Fiksi</a>
+        <a href="#" class="footer-link">Agama & Rohani</a>
+        <a href="#" class="footer-link">Pendidikan</a>
+      </div>
+      <div>
+        <div class="footer-title">Hubungi Kami</div>
+        <div class="footer-link flex items-center gap-2"><i class="fa-solid fa-location-dot text-purple-400"></i>Kota Jayapura, Papua</div>
+        <div class="footer-link flex items-center gap-2"><i class="fa-solid fa-clock text-purple-400"></i>Senin�Sabtu 08.00�17.00</div>
+        <div class="footer-link flex items-center gap-2"><i class="fa-solid fa-envelope text-purple-400"></i>faithhopelove@library.id</div>
+      </div>
+    </div>
+    <div style="height:1px;background:rgba(255,255,255,.15);margin-bottom:24px"></div>
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:rgba(255,255,255,.7)">� 2025 Faith Hope Love Library. Gratis untuk semua warga Jayapura.</div>
+      <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:rgba(255,255,255,.7)">By Diana Kambuaya</div>
+    </div>
+  </div>
+</footer>
+<div class="modal-overlay" :class="{ open: searchModalOpen }" @click.self="closeSearch()">
+  <div class="modal-box" style="max-width:560px">
+    <button class="modal-close" @click="closeSearch()"><i class="fa-solid fa-xmark"></i></button>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#3b0764;margin-bottom:16px">Cari Buku</h3>
+    <div class="search-bar mb-6">
+      <i class="fa-solid fa-magnifying-glass text-purple-300 mr-2"></i>
+      <input type="text" placeholder="Judul, penulis, atau kategori..." x-model="searchQuery" x-ref="searchInput" @input="" />
+      <button class="search-btn"><i class="fa-solid fa-search"></i> Cari</button>
+    </div>
+    <div x-show="searchQuery.trim()===''">
+      <div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:10px">Pencarian Populer</div>
+      <div class="flex flex-wrap gap-2">
+        <template x-for="tag in popularSearchTags" :key="tag">
+          <span class="chip" @click="searchQuery=tag" x-text="tag"></span>
+        </template>
+      </div>
+    </div>
+    <div class="mt-4 space-y-3">
+      <template x-if="searchQuery.trim()!=='' && searchResults.length===0">
+        <p style="font-family:Poppins,sans-serif;font-size:0.85rem;color:#9ca3af;text-align:center;padding:16px">Tidak ditemukan. Coba kata kunci lain.</p>
+      </template>
+      <template x-for="b in searchResults" :key="b.id">
+        <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 cursor-pointer transition" @click="closeSearch(); openBook(b.id)">
+          <div class="w-10 h-12 rounded-lg flex items-center justify-center flex-shrink-0" :style="`background:linear-gradient(135deg,${b.color.split(',')[0]},${b.color.split(',')[1]})`">
+            <i class="fa-solid text-white" :class="b.icon"></i>
+          </div>
+          <div>
+            <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.88rem;color:#3b0764" x-text="b.title"></div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:#9ca3af" x-text="b.author+' � '+b.cat"></div>
+          </div>
+          <div class="ml-auto stars text-xs" x-html="starHtml(b.rating)"></div>
+        </div>
+      </template>
+    </div>
+  </div>
+</div>
+</body>
+</html>

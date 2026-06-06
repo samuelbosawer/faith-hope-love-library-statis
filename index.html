@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faith Hope Love Library – Jayapura</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/img/logo.svg" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <script src="/assets/js/config.js"></script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+
+</head>
+<body
+  x-data="libraryApp()"
+  x-init="init()"
+  @keydown.escape.window="closeSearch(); closeBook()"
+  @keydown.ctrl.k.window.prevent="openSearch()"
+  @keydown.meta.k.window.prevent="openSearch()"
+>
+
+<!-- ════════════════════════════════════════════════
+     DESKTOP NAVIGATION
+════════════════════════════════════════════════ -->
+<nav id="desktop-nav" :class="{ scrolled: isScrolled }">
+  <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+    <a href="#hero" class="flex items-center gap-3 no-underline">
+      <div class="w-10 h-10 rounded-xl overflow-hidden border border-white/20 bg-white shadow-sm">
+        <img src="assets/img/logo.svg" alt="Faith Hope Love Library" class="w-full h-full object-contain" />
+      </div>
+      <div>
+        <div class="font-bold leading-none" style="font-family:'Playfair Display',serif;color:#3b0764;font-size:1rem">Faith Hope Love</div>
+        <div style="font-family:'Poppins',sans-serif;font-size:0.62rem;color:#9333ea;letter-spacing:.06em;text-transform:uppercase;font-weight:500">Library · Jayapura</div>
+      </div>
+    </a>
+    <div class="flex items-center gap-7">
+      <a href="#hero"         class="nav-link" :class="{ active: activeSection==='hero' }">Beranda</a>
+      <a href="#best-books"   class="nav-link" :class="{ active: activeSection==='best-books' }">Terpopuler</a>
+      <a href="#new-books"    class="nav-link" :class="{ active: activeSection==='new-books' }">Buku Baru</a>
+      <a href="#categories"   class="nav-link" :class="{ active: activeSection==='categories' }">Kategori</a>
+      <a href="#how-it-works" class="nav-link" :class="{ active: activeSection==='how-it-works' }">Cara Pinjam</a>
+      <a href="#about"        class="nav-link" :class="{ active: activeSection==='about' }">Tentang</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button @click="openSearch()" class="flex items-center gap-2 px-4 py-2 rounded-full border border-purple-200 text-purple-700 text-sm font-medium hover:bg-purple-50 transition" style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:600">
+        <i class="fa-solid fa-magnifying-glass"></i> Cari Buku
+      </button>
+      <a href="login.html" class="btn-primary" style="font-size:0.78rem;padding:10px 22px">
+        <i class="fa-solid fa-user"></i> Masuk
+      </a>
+      <a href="register.html" class="btn-primary" style="font-size:0.78rem;padding:10px 22px">
+        <i class="fa-solid fa-user-plus"></i> Daftar
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════════
+     MOBILE BOTTOM NAVIGATION
+════════════════════════════════════════════════ -->
+<nav id="mobile-nav">
+  <div class="mob-nav-item" :class="{ active: activeMobNav==='hero' }"         @click="scrollToSection('hero')">
+    <i class="fa-solid fa-house"></i><span>Beranda</span>
+  </div>
+  <div class="mob-nav-item" :class="{ active: activeMobNav==='best-books' }"   @click="scrollToSection('best-books')">
+    <i class="fa-solid fa-fire"></i><span>Populer</span>
+  </div>
+  <div class="mob-nav-item" :class="{ active: activeMobNav==='categories' }"   @click="scrollToSection('categories')">
+    <i class="fa-solid fa-book"></i><span>Kategori</span>
+  </div>
+  <div class="mob-nav-item" @click="openSearch()">
+    <i class="fa-solid fa-magnifying-glass"></i><span>Cari</span>
+  </div>
+  <div class="mob-nav-item" @click="showToast('Fitur akun segera hadir! 🎉')">
+    <i class="fa-solid fa-user"></i><span>Akun</span>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="orb w-96 h-96" style="top:-80px;right:-80px;"></div>
+  <div class="orb w-64 h-64" style="bottom:-40px;left:-40px;"></div>
+  <div class="max-w-7xl mx-auto px-6 py-20 w-full relative z-10">
+    <div class="grid lg:grid-cols-2 gap-14 items-center">
+ 
+      <!-- Left copy -->
+      <div class="space-y-7">
+        <span class="hero-tag anim-fade-up">
+          <i class="fa-solid fa-location-dot"></i> Kota Jayapura, Papua
+        </span>
+ 
+        <!-- Logo + Title block -->
+        <div class="hero-brand anim-fade-up delay-1">
+          <img src="assets/img/logo.svg" alt="Faith Hope Love Library Logo" class="hero-brand-logo" />
+          <div class="hero-brand-text">
+            <div class="hero-brand-label">Faith Hope Love Library</div>
+            <h1 class="hero-title" style="font-size:clamp(1.9rem,5vw,3.6rem);">
+              Tempat Pinjam Buku Gratis
+            </h1>
+          </div>
+        </div>
+        <p class="hero-subtitle anim-fade-up delay-2">
+          Faith Hope Love Library hadir untuk semua warga Jayapura.Buku tersedia secara gratis untuk dipinjam.
+        </p>
+ 
+        <!-- Search -->
+        <div class="search-bar anim-fade-up delay-3" style="background:rgba(255,255,255,0.95)">
+          <i class="fa-solid fa-magnifying-glass text-purple-300 mr-2"></i>
+          <input type="text" placeholder="Cari judul, penulis, atau kategori..."
+                 x-model="heroSearchQuery"
+                 @keydown.enter="openSearchWithQuery()" />
+          <button class="search-btn" @click="openSearchWithQuery()">
+            <i class="fa-solid fa-search"></i> <span class="hidden sm:inline">Cari</span>
+          </button>
+        </div>
+ 
+        <!-- Filter chips -->
+        <div class="flex flex-wrap gap-2 anim-fade-up delay-4">
+          <template x-for="chip in heroChips" :key="chip">
+            <span class="chip" :class="{ active: activeHeroChip===chip }"
+                  @click="activeHeroChip=chip; showToast('Filter: '+chip+' 📚')">
+              <i class="fa-solid fa-star" x-show="chip==='Semua'"></i>
+              <span x-text="chip"></span>
+            </span>
+          </template>
+        </div>
+ 
+        <div class="flex gap-3 anim-fade-up delay-5">
+          <a href="#best-books" class="btn-primary"><i class="fa-solid fa-book-open-reader"></i> Jelajahi Buku</a>
+          <a href="#how-it-works" class="btn-outline"><i class="fa-solid fa-play"></i> Cara Pinjam</a>
+        </div>
+ 
+     
+      </div>
+ 
+      <!-- Right decoration -->
+      <div class="hidden lg:flex flex-col gap-5 items-center float-anim">
+        <div class="book-card w-full max-w-xs">
+          <div class="flex items-start gap-4">
+            <div class="w-14 h-20 rounded-lg flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#c084fc,#7e22ce)">
+              <i class="fa-solid fa-book text-white text-2xl"></i>
+            </div>
+            <div>
+              <div class="text-white font-semibold" style="font-family:'Playfair Display',serif;font-size:0.95rem">Laskar Pelangi</div>
+              <div style="color:rgba(255,255,255,.65);font-size:0.75rem;font-family:'Poppins',sans-serif">Andrea Hirata</div>
+              <div class="mt-2 text-yellow-300 text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            </div>
+          </div>
+          <div class="mt-3 pt-3 border-t border-white/20 flex justify-between items-center">
+            <span style="color:rgba(255,255,255,.65);font-size:0.72rem;font-family:'Poppins',sans-serif"><i class="fa-solid fa-users mr-1"></i>48 pembaca bulan ini</span>
+            <span class="bg-white/20 text-white px-3 py-1 rounded-full text-xs" style="font-family:'Montserrat',sans-serif;font-weight:600">Tersedia</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 w-full max-w-xs">
+          <div class="book-card text-center py-4">
+            <i class="fa-solid fa-fire text-orange-300 text-2xl mb-2"></i>
+            <div class="text-white text-sm font-semibold" style="font-family:'Montserrat',sans-serif">Trending</div>
+            <div class="text-white/60 text-xs" style="font-family:'Poppins',sans-serif">12 buku</div>
+          </div>
+          <div class="book-card text-center py-4">
+            <i class="fa-solid fa-sparkles text-yellow-300 text-2xl mb-2"></i>
+            <div class="text-white text-sm font-semibold" style="font-family:'Montserrat',sans-serif">Buku Baru</div>
+            <div class="text-white/60 text-xs" style="font-family:'Poppins',sans-serif">8 judul baru</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Wave -->
+  <div style="position:absolute;bottom:0;left:0;right:0;">
+    <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0 60L60 50C120 40 240 20 360 15C480 10 600 20 720 27.5C840 35 960 40 1080 37.5C1200 35 1320 25 1380 20L1440 15V60H1380C1320 60 1200 60 1080 60C960 60 840 60 720 60C600 60 480 60 360 60C240 60 120 60 60 60H0Z" fill="#faf5ff"/>
+    </svg>
+  </div>
+</section>
+
+
+
+<!-- ════════════════════════════════════════════════
+     BEST BOOKS
+════════════════════════════════════════════════ -->
+<section id="best-books" class="py-20 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+      <div>
+        <div class="section-eyebrow mb-3"><i class="fa-solid fa-fire text-orange-500"></i> Paling Banyak Dibaca</div>
+        <h2 class="section-title">Buku <em>Terbaik</em> Bulan Ini</h2>
+      </div>
+      <a href="all-book.html" class="flex items-center gap-2 text-purple-700 font-semibold text-sm hover:text-purple-900 transition" style="font-family:'Montserrat',sans-serif;white-space:nowrap">
+        Lihat Semua <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+    <div class="scroll-row lg:grid lg:grid-cols-4 lg:gap-5">
+      <template x-for="book in bestBooks" :key="book.id">
+        <div class="book-item" @click="openBook(book.id)">
+          <div class="book-cover" :style="`background:linear-gradient(135deg,${book.color.split(',')[0]},${book.color.split(',')[1]})`">
+            <div class="book-cover-inner">
+              <i class="fa-solid text-white/60 text-4xl" :class="book.icon"></i>
+              <div class="book-cover-title" x-text="book.title"></div>
+              <div class="book-cover-author" x-text="book.author"></div>
+            </div>
+            <span class="badge-best">BEST</span>
+          </div>
+          <div class="book-body">
+            <div class="book-title" x-text="book.title"></div>
+            <div class="book-author" x-text="book.author"></div>
+            <div class="book-meta">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-star text-yellow-400"></i>
+                <span class="rating-text" x-text="book.rating"></span>
+              </div>
+              <button class="borrow-btn" @click.stop="borrowBook(book.title)">
+                <i class="fa-solid fa-hand-holding-heart"></i>Pinjam
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>
+
+<div class="gradient-divider mx-6 max-w-7xl mx-auto"></div>
+
+<!-- ════════════════════════════════════════════════
+     NEW BOOKS
+════════════════════════════════════════════════ -->
+<section id="new-books" class="py-20 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+      <div>
+        <div class="section-eyebrow mb-3"><i class="fa-solid fa-sparkles text-purple-500"></i> Baru Ditambahkan</div>
+        <h2 class="section-title">Koleksi <em>Terbaru</em></h2>
+      </div>
+      <a href="all-book.html" class="flex items-center gap-2 text-purple-700 font-semibold text-sm hover:text-purple-900 transition" style="font-family:'Montserrat',sans-serif;white-space:nowrap">
+        Lihat Semua <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+    <div class="scroll-row lg:grid lg:grid-cols-4 lg:gap-5">
+      <template x-for="book in newBooks" :key="book.id">
+        <div class="book-item" @click="openBook(book.id)">
+          <div class="book-cover" :style="`background:linear-gradient(135deg,${book.color.split(',')[0]},${book.color.split(',')[1]})`">
+            <div class="book-cover-inner">
+              <i class="fa-solid text-white/60 text-4xl" :class="book.icon"></i>
+              <div class="book-cover-title" x-text="book.title"></div>
+              <div class="book-cover-author" x-text="book.author"></div>
+            </div>
+            <span class="badge-new">NEW</span>
+          </div>
+          <div class="book-body">
+            <div class="book-title" x-text="book.title"></div>
+            <div class="book-author" x-text="book.author"></div>
+            <div class="book-meta">
+              <div class="flex items-center">
+                <div class="stars" x-html="starHtml(book.rating)"></div>
+                <span class="rating-text" x-text="book.rating"></span>
+              </div>
+              <button class="borrow-btn" @click.stop="borrowBook(book.title)">
+                <i class="fa-solid fa-hand-holding-heart"></i>Pinjam
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>
+
+<div class="gradient-divider mx-6"></div>
+
+<!-- ════════════════════════════════════════════════
+     RATING SECTION
+════════════════════════════════════════════════ -->
+<section id="rated-books" class="py-20 px-6" style="background:linear-gradient(180deg,#faf5ff,#f3e8ff)">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+      <div>
+        <div class="section-eyebrow mb-3"><i class="fa-solid fa-trophy text-yellow-500"></i> Rating Tertinggi</div>
+        <h2 class="section-title">Buku Berdasarkan <em>Rating</em></h2>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex gap-6 mb-8 border-b border-purple-100 overflow-x-auto">
+      <template x-for="tab in ratingTabs" :key="tab.value">
+        <button
+          class="pb-3 font-semibold text-sm"
+          :class="activeRatingTab===tab.value ? 'tab-active' : 'text-gray-500'"
+          style="font-family:'Montserrat',sans-serif;white-space:nowrap"
+          @click="activeRatingTab=tab.value"
+        >
+          <i class="fa-solid fa-star text-yellow-400 mr-1"></i>
+          <span x-text="tab.label"></span>
+        </button>
+      </template>
+    </div>
+
+    <div class="scroll-row lg:grid lg:grid-cols-4 lg:gap-5">
+      <template x-for="book in ratedBooks" :key="book.id">
+        <div class="book-item" @click="openBook(book.id)">
+          <div class="book-cover" :style="`background:linear-gradient(135deg,${book.color.split(',')[0]},${book.color.split(',')[1]})`">
+            <div class="book-cover-inner">
+              <i class="fa-solid text-white/60 text-2xl" :class="book.icon"></i>
+              <div class="book-cover-title" x-text="book.title"></div>
+              <div class="book-cover-author" x-text="book.author"></div>
+            </div>
+          </div>
+          <div class="book-body">
+            <div class="book-title" x-text="book.title"></div>
+            <div class="book-author" x-text="book.author"></div>
+            <div class="book-meta">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-star text-yellow-400"></i>
+                <span class="rating-text" x-text="book.rating"></span>
+              </div>
+              <button class="borrow-btn" @click.stop="borrowBook(book.title)">
+                <i class="fa-solid fa-hand-holding-heart"></i>Pinjam
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
+      <p x-show="ratedBooks.length===0" class="text-gray-400 col-span-4 text-center py-8" style="font-family:Poppins,sans-serif">
+        Tidak ada buku untuk filter ini.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     FEATURED QUOTE BANNER
+════════════════════════════════════════════════ -->
+<section class="py-16 px-6">
+  <div class="max-w-4xl mx-auto">
+    <div class="feature-banner">
+      <div class="relative z-10">
+        <i class="fa-solid fa-quote-left text-purple-300 text-3xl mb-4"></i>
+        <p style="font-family:'Playfair Display',serif;font-size:clamp(1.3rem,3vw,2rem);font-weight:400;color:white;line-height:1.5;max-width:700px">
+          "Membaca adalah jembatan antara mimpi dan kenyataan. Di Faith Hope Love Library, setiap buku membuka pintu menuju dunia yang lebih luas."
+        </p>
+        <div class="mt-6 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.4)">
+            <i class="fa-solid fa-user text-white"></i>
+          </div>
+          <div>
+            <div style="font-family:'Montserrat',sans-serif;font-weight:700;color:white">Diana Kambuaya</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.78rem;color:rgba(255,255,255,.65)">Pendiri Faith Hope Love Library</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     CATEGORIES
+════════════════════════════════════════════════ -->
+<section id="categories" class="py-20 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+      <div class="section-eyebrow justify-center mb-3"><i class="fa-solid fa-layer-group"></i> Jelajahi Koleksi</div>
+      <h2 class="section-title">Buku Berdasarkan <em>Kategori</em></h2>
+      <p class="mt-3 text-gray-500 max-w-lg mx-auto" style="font-family:'Poppins',sans-serif;font-size:0.88rem">Temukan buku favoritmu dari berbagai kategori yang tersedia di perpustakaan kami.</p>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+      <template x-for="cat in categories" :key="cat.name">
+        <div class="cat-card" :style="`background:${cat.bg}`" @click="showToast('Menjelajahi kategori: '+cat.name+' 📚')">
+          <div class="cat-icon"><i class="fa-solid text-white/80" :class="cat.icon"></i></div>
+          <div class="cat-name" x-text="cat.name"></div>
+          <div class="cat-count" x-text="cat.count+' buku'"></div>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>
+
+<div class="gradient-divider mx-6"></div>
+
+<!-- ════════════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════════════ -->
+<section id="how-it-works" class="py-20 px-6" style="background:linear-gradient(180deg,#faf5ff,#fff)">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-12">
+      <div class="section-eyebrow justify-center mb-3"><i class="fa-solid fa-circle-info"></i> Panduan</div>
+      <h2 class="section-title">Cara <em>Meminjam</em> Buku</h2>
+      <p class="mt-3 text-gray-500 max-w-lg mx-auto" style="font-family:'Poppins',sans-serif;font-size:0.88rem">Proses peminjaman yang mudah dan cepat, gratis untuk semua warga.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-title">Daftar Anggota</div>
+        <div class="step-desc">Daftar sebagai anggota perpustakaan dengan membawa KTP atau kartu pelajar.</div>
+        <div class="mt-4"><i class="fa-solid fa-id-card text-purple-400 text-2xl"></i></div>
+      </div>
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-title">Pilih Buku</div>
+        <div class="step-desc">Pilih buku yang ingin kamu baca dari koleksi lebih dari 1.200 judul.</div>
+        <div class="mt-4"><i class="fa-solid fa-book text-purple-400 text-2xl"></i></div>
+      </div>
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-title">Pinjam Gratis</div>
+        <div class="step-desc">Pinjam buku selama 2 minggu tanpa biaya apapun. Bisa diperpanjang!</div>
+        <div class="mt-4"><i class="fa-solid fa-hand-holding-heart text-purple-400 text-2xl"></i></div>
+      </div>
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <div class="step-title">Kembalikan</div>
+        <div class="step-desc">Kembalikan buku tepat waktu agar teman lain juga bisa menikmatinya.</div>
+        <div class="mt-4"><i class="fa-solid fa-rotate-left text-purple-400 text-2xl"></i></div>
+      </div>
+    </div>
+    <div class="highlight-box mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+      <i class="fa-solid fa-circle-check text-purple-500 text-3xl flex-shrink-0"></i>
+      <div>
+        <div style="font-family:'Montserrat',sans-serif;font-weight:700;color:#3b0764;font-size:0.95rem">Gratis Tanpa Syarat</div>
+        <div style="font-family:'Poppins',sans-serif;font-size:0.82rem;color:#6b7280;margin-top:4px">Tidak ada biaya pendaftaran maupun peminjaman. Semua buku dapat dipinjam gratis oleh seluruh warga Kota Jayapura.</div>
+      </div>
+      <button @click="showToast('Hubungi kami untuk info lebih lanjut 📚')" class="btn-primary flex-shrink-0" style="font-size:0.75rem;padding:10px 20px">
+        <i class="fa-solid fa-phone"></i> Hubungi Kami
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     TESTIMONIALS
+════════════════════════════════════════════════ -->
+<section id="testimonials" class="py-20 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+      <div class="section-eyebrow justify-center mb-3"><i class="fa-solid fa-comments"></i> Kata Mereka</div>
+      <h2 class="section-title">Cerita dari <em>Pembaca</em> Kami</h2>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <template x-for="t in testimonials" :key="t.name">
+        <div class="testi-card">
+          <div class="stars mb-3" style="font-size:0.9rem" x-html="starHtml(5)"></div>
+          <p class="testi-text" x-text="'&quot;'+t.text+'&quot;'"></p>
+          <div class="flex items-center gap-3">
+            <div class="testi-avatar" x-text="t.initial"></div>
+            <div>
+              <div class="testi-name" x-text="t.name"></div>
+              <div class="testi-role" x-text="t.role"></div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>
+
+<div class="gradient-divider mx-6"></div>
+
+<!-- ════════════════════════════════════════════════
+     ABOUT
+════════════════════════════════════════════════ -->
+<section id="about" class="py-20 px-6" style="background:linear-gradient(180deg,#fff,#faf5ff)">
+  <div class="max-w-5xl mx-auto">
+    <div class="grid lg:grid-cols-2 gap-14 items-center">
+      <div>
+        <div class="section-eyebrow mb-3"><i class="fa-solid fa-heart"></i> Tentang Kami</div>
+        <h2 class="section-title mb-5">Perpustakaan dengan <em>Hati</em></h2>
+        <p class="text-gray-600 mb-4 leading-relaxed" style="font-family:'Poppins',sans-serif;font-size:0.9rem">
+          Faith Hope Love Library didirikan oleh <strong>Diana Kambuaya</strong> sebagai wujud cinta terhadap literasi dan masyarakat Kota Jayapura. Nama "Faith, Hope, Love" terinspirasi dari 1 Korintus 13:13 — sebuah pengingat bahwa cinta terbesar adalah memberi tanpa pamrih.
+        </p>
+        <p class="text-gray-600 mb-6 leading-relaxed" style="font-family:'Poppins',sans-serif;font-size:0.9rem">
+          Perpustakaan ini hadir sebagai ruang baca, tempat belajar, dan komunitas bagi siapa saja yang ingin berkembang melalui buku — tanpa batas ekonomi, tanpa biaya.
+        </p>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="highlight-box text-center">
+            <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:#7e22ce">2020</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:#9ca3af">Tahun Berdiri</div>
+          </div>
+          <div class="highlight-box text-center">
+            <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:#7e22ce">Jayapura</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:#9ca3af">Lokasi</div>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <button @click="showToast('Informasi lokasi segera hadir 📍')" class="btn-primary" style="font-size:0.8rem;padding:12px 24px">
+            <i class="fa-solid fa-map-location-dot"></i> Kunjungi Kami
+          </button>
+          <button @click="showToast('Bergabung sebagai relawan! 🙌')" class="flex items-center gap-2 px-5 py-3 rounded-full border-2 border-purple-300 text-purple-700 font-semibold text-sm hover:bg-purple-50 transition" style="font-family:'Montserrat',sans-serif;font-size:0.8rem">
+            <i class="fa-solid fa-hands-holding-heart"></i> Jadi Relawan
+          </button>
+        </div>
+      </div>
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="book-item p-5 text-center" style="border-radius:20px">
+            <i class="fa-solid fa-book-open text-purple-500 text-3xl mb-3"></i>
+            <div style="font-family:'Montserrat',sans-serif;font-weight:700;color:#3b0764">1.200+</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:#9ca3af">Judul Buku</div>
+          </div>
+          <div class="book-item p-5 text-center" style="border-radius:20px">
+            <i class="fa-solid fa-users text-purple-500 text-3xl mb-3"></i>
+            <div style="font-family:'Montserrat',sans-serif;font-weight:700;color:#3b0764">500+</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:#9ca3af">Anggota Aktif</div>
+          </div>
+          <div class="book-item p-5 text-center" style="border-radius:20px">
+            <i class="fa-solid fa-hand-holding-heart text-purple-500 text-3xl mb-3"></i>
+            <div style="font-family:'Montserrat',sans-serif;font-weight:700;color:#3b0764">Gratis</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:#9ca3af">Untuk Semua</div>
+          </div>
+          <div class="book-item p-5 text-center" style="border-radius:20px">
+            <i class="fa-solid fa-calendar-check text-purple-500 text-3xl mb-3"></i>
+            <div style="font-family:'Montserrat',sans-serif;font-weight:700;color:#3b0764">5 Tahun</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:#9ca3af">Berkhidmat</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     NEWSLETTER / CTA
+════════════════════════════════════════════════ -->
+<section class="py-16 px-6">
+  <div class="max-w-3xl mx-auto text-center">
+    <div class="feature-banner" style="padding:48px 32px">
+      <div class="relative z-10">
+        <i class="fa-solid fa-envelope text-purple-300 text-3xl mb-4"></i>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.2rem);color:white;margin-bottom:12px">Dapatkan Info Buku Terbaru</h2>
+        <p style="font-family:'Poppins',sans-serif;font-size:0.88rem;color:rgba(255,255,255,.75);margin-bottom:24px">Daftarkan email kamu dan dapatkan notifikasi buku baru, event, dan rekomendasi spesial.</p>
+        <div class="search-bar max-w-md mx-auto" style="background:rgba(255,255,255,.95)">
+          <i class="fa-solid fa-envelope text-purple-300 mr-2"></i>
+          <input type="email" placeholder="email@kamu.com" x-model="newsletterEmail" />
+          <button class="search-btn" @click="showToast('Terima kasih! Kamu akan mendapat info terbaru 💌'); newsletterEmail=''">
+            Daftar <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════ -->
+<footer>
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+      <div class="lg:col-span-1">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-xl overflow-hidden border border-white/20 bg-white shadow-sm">
+            <img src="assets/img/logo.svg" alt="Faith Hope Love Library" class="w-full h-full object-contain" />
+          </div>
+          <div>
+            <div style="font-family:'Playfair Display',serif;color:white;font-weight:700;font-size:1rem">Faith Hope Love</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.62rem;color:#c084fc;letter-spacing:.06em;text-transform:uppercase">Library</div>
+          </div>
+        </div>
+        <p class="footer-link" style="display:block;line-height:1.7;font-size:0.82rem">Tempat peminjaman buku gratis untuk seluruh warga Kota Jayapura, Papua.</p>
+        <div class="flex gap-2 mt-4">
+          <a href="#" class="social-btn"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-btn"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" class="social-btn"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" class="social-btn"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-title">Navigasi</div>
+        <a href="#hero" class="footer-link"></i>Beranda</a>
+        <a href="#best-books" class="footer-link">Buku Terpopuler</a>
+        <a href="#new-books" class="footer-link"></i>Buku Baru</a>
+        <a href="#categories" class="footer-link"></i>Kategori</a>
+        <a href="#about" class="footer-link"></i>Tentang Kami</a>
+      </div>
+      <div>
+        <div class="footer-title">Kategori</div>
+        <a href="#" class="footer-link">Novel & Fiksi</a>
+        <a href="#" class="footer-link">Agama & Rohani</a>
+        <a href="#" class="footer-link">Pendidikan</a>
+        <a href="#" class="footer-link">Buku Anak</a>
+        <a href="#" class="footer-link">Sejarah & Budaya Papua</a>
+        <a href="#" class="footer-link">Sains & Teknologi</a>
+      </div>
+      <div>
+        <div class="footer-title">Hubungi Kami</div>
+        <div class="footer-link flex items-start gap-2"><i class="fa-solid fa-location-dot text-purple-400 mt-0.5"></i>Kota Jayapura, Papua, Indonesia</div>
+        <div class="footer-link flex items-center gap-2"><i class="fa-solid fa-clock text-purple-400"></i>Senin – Sabtu: 08.00 – 17.00</div>
+        <div class="footer-link flex items-center gap-2"><i class="fa-brands fa-whatsapp text-purple-400"></i>+62 xxx xxxx xxxx</div>
+        <div class="footer-link flex items-center gap-2"><i class="fa-solid fa-envelope text-purple-400"></i>faithhopelove@library.id</div>
+      </div>
+    </div>
+    <div style="height:1px;background:rgba(255,255,255,.1);margin-bottom:24px"></div>
+    <div class="flex flex-col items-center gap-3">
+      <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:rgba(255,255,255,.4)">
+        © 2025 Faith Hope Love Library. All rights reserved.
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════════════
+     SEARCH MODAL
+════════════════════════════════════════════════ -->
+<div class="modal-overlay" :class="{ open: searchModalOpen }" @click.self="closeSearch()">
+  <div class="modal-box" style="max-width:560px">
+    <button class="modal-close" @click="closeSearch()"><i class="fa-solid fa-xmark"></i></button>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#3b0764;margin-bottom:16px">Cari Buku</h3>
+    <div class="search-bar mb-6">
+      <i class="fa-solid fa-magnifying-glass text-purple-300 mr-2"></i>
+      <input type="text" placeholder="Judul, penulis, atau kategori..."
+             x-model="searchQuery"
+             x-ref="searchInput"
+             @input="/* reactive via computed */" />
+      <button class="search-btn"><i class="fa-solid fa-search"></i> Cari</button>
+    </div>
+    <div x-show="searchQuery.trim()===''">
+      <div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:10px">Pencarian Populer</div>
+      <div class="flex flex-wrap gap-2">
+        <template x-for="tag in popularSearchTags" :key="tag">
+          <span class="chip" @click="searchQuery=tag" x-text="tag"></span>
+        </template>
+      </div>
+    </div>
+    <div class="mt-4 space-y-3">
+      <template x-if="searchQuery.trim()!=='' && searchResults.length===0">
+        <p style="font-family:Poppins,sans-serif;font-size:0.85rem;color:#9ca3af;text-align:center;padding:16px">Tidak ditemukan. Coba kata kunci lain.</p>
+      </template>
+      <template x-for="b in searchResults" :key="b.id">
+        <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 cursor-pointer transition"
+             @click="closeSearch(); openBook(b.id)">
+          <div class="w-10 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+               :style="`background:linear-gradient(135deg,${b.color.split(',')[0]},${b.color.split(',')[1]})`">
+            <i class="fa-solid text-white" :class="b.icon"></i>
+          </div>
+          <div>
+            <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.88rem;color:#3b0764" x-text="b.title"></div>
+            <div style="font-family:'Poppins',sans-serif;font-size:0.75rem;color:#9ca3af" x-text="b.author+' · '+b.cat"></div>
+          </div>
+          <div class="ml-auto stars text-xs" x-html="starHtml(b.rating)"></div>
+        </div>
+      </template>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     BOOK DETAIL MODAL
+════════════════════════════════════════════════ -->
+<div class="modal-overlay" :class="{ open: bookModalOpen }" @click.self="closeBook()">
+  <div class="modal-box" x-show="selectedBook">
+    <button class="modal-close" @click="closeBook()"><i class="fa-solid fa-xmark"></i></button>
+    <template x-if="selectedBook">
+      <div>
+        <div class="w-full h-40 rounded-xl mb-5 flex items-center justify-center gap-4"
+             :style="`background:linear-gradient(135deg,${selectedBook.color.split(',')[0]},${selectedBook.color.split(',')[1]})`">
+          <i class="fa-solid text-white text-5xl opacity-60" :class="selectedBook.icon"></i>
+        </div>
+        <div style="font-family:'Poppins',sans-serif;font-size:0.72rem;color:#9333ea;font-weight:600;text-transform:uppercase;letter-spacing:.08em" x-text="selectedBook.cat"></div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#3b0764;font-weight:700;margin-bottom:4px" x-text="selectedBook.title"></h3>
+        <p style="font-family:'Poppins',sans-serif;font-size:0.85rem;color:#9ca3af;margin-bottom:12px" x-text="'oleh '+selectedBook.author"></p>
+        <div class="flex items-center gap-3 mb-4">
+          <div class="stars text-base" x-html="starHtml(selectedBook.rating)"></div>
+          <span style="font-family:'Poppins',sans-serif;font-size:0.85rem;color:#6b7280" x-text="selectedBook.rating+' · '+selectedBook.reads+' pembaca'"></span>
+        </div>
+        <p style="font-family:'Poppins',sans-serif;font-size:0.85rem;color:#6b7280;line-height:1.7;margin-bottom:20px">
+          Buku ini tersedia untuk dipinjam secara gratis di Faith Hope Love Library, Kota Jayapura. Kunjungi perpustakaan kami untuk mendapatkan buku ini dan ratusan judul lainnya.
+        </p>
+        <div class="flex gap-3">
+          <button class="btn-primary w-full justify-center" @click="borrowBook(selectedBook.title); closeBook()">
+            <i class="fa-solid fa-hand-holding-heart"></i> Pinjam Sekarang
+          </button>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" :class="{ show: toastVisible }">
+  <i class="fa-solid fa-circle-check text-green-400"></i>
+  <span x-text="toastMessage"></span>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     ALPINE.JS APP
+════════════════════════════════════════════════ -->
+<script src="assets/js/apline.js"></script>
+
+</body>
+</html>
