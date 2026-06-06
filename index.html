@@ -147,17 +147,6 @@
           Faith Hope Love Library hadir untuk semua warga Jayapura.Buku tersedia secara gratis untuk dipinjam.
         </p>
  
-        <!-- Search -->
-        <div class="search-bar anim-fade-up delay-3" style="background:rgba(255,255,255,0.95)">
-          <i class="fa-solid fa-magnifying-glass text-purple-300 mr-2"></i>
-          <input type="text" placeholder="Cari judul, penulis, atau kategori..."
-                 x-model="heroSearchQuery"
-                 @keydown.enter="openSearchWithQuery()" />
-          <button class="search-btn" @click="openSearchWithQuery()">
-            <i class="fa-solid fa-search"></i> <span class="hidden sm:inline">Cari</span>
-          </button>
-        </div>
- 
         <!-- Filter chips -->
         <div class="flex flex-wrap gap-2 anim-fade-up delay-4">
           <template x-for="chip in heroChips" :key="chip">

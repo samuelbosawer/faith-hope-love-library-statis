@@ -177,7 +177,7 @@
       display: flex; align-items: center; gap: 20px;
     }
     .hero-brand-logo {
-      width: 80px; height: 80px; border-radius: 18px;
+      width: 110px; height: 110px; border-radius: 18px;
       object-fit: cover; box-shadow: 0 8px 24px rgba(0,0,0,0.25);
       flex-shrink: 0;
     }
@@ -368,7 +368,7 @@
       .section-title { font-size: 1.7rem; }
       .hero-brand { flex-wrap: wrap; gap: 14px; }
       .hero-brand-text { border-left: none; padding-left: 0; }
-      .hero-brand-logo { width: 68px; height: 68px; }
+      .hero-brand-logo { width: 90px; height: 90px; }
       .hero-title { font-size: clamp(1.9rem, 4vw, 3rem); word-break: break-word; }
       .search-bar { padding: 12px 14px; flex-wrap: nowrap; }
       .search-bar input { flex: 1; min-width: 0; width: auto; }
